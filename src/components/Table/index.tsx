@@ -58,7 +58,7 @@ function Table({ data, columns }: { data: any; columns: any }) {
         rowsCount={filteredRows.length}
         minHeight={500}
         toolbar={
-          <Toolbar enableFilter={true} >
+          <Toolbar enableFilter={true}>
             {rows.length ? (
               <CSVLink
                 data={rows}
@@ -69,7 +69,7 @@ function Table({ data, columns }: { data: any; columns: any }) {
                   })
                 )}
               >
-                <Button>Download CSV</Button>
+                <i className="ni ni-cloud-download-95 ct-download" />
               </CSVLink>
             ) : null}
           </Toolbar>

@@ -1,7 +1,7 @@
 import React from "react";
 import { Filters } from "react-data-grid-addons";
 import { connect } from "react-redux";
-import { Card, CardHeader, Button, Container, Col, Row } from "reactstrap";
+import { Card, CardHeader, Container, Col, Row, Spinner } from "reactstrap";
 import { getMockReport } from "../../actions";
 import Table from "../../components/Table";
 import Header from "../../components/Header";
@@ -11,7 +11,7 @@ const defaultColumnProperties = {
   sortable: true,
 };
 
-const { NumericFilter, AutoCompleteFilter } = Filters;
+const { NumericFilter, AutoCompleteFilter, DateFilter } = Filters;
 
 const columns = [
   {
@@ -30,6 +30,11 @@ const columns = [
     name: "Title",
     filterRenderer: AutoCompleteFilter,
   },
+  {
+    key: "date",
+    name: "Date",
+    filterRenderer: DateFilter,
+  },
 ].map((c) => ({ ...c, ...defaultColumnProperties }));
 class Reports extends React.Component<{
   dispatch: any;
@@ -46,7 +51,7 @@ class Reports extends React.Component<{
     this.props.dispatch(getMockReport());
   }
   render() {
-    console.log(this.props);
+    const date = new Date();
     return (
       <>
         <Header />
@@ -61,7 +66,17 @@ class Reports extends React.Component<{
                     </div>
                   </Row>
                 </CardHeader>
-                <Table columns={columns} data={this.props.mockReport.data} />
+                {this.props.mockReport.loading ? (
+                  <Spinner />
+                ) : (
+                  <Table
+                    columns={columns}
+                    data={this.props.mockReport.data.map((item) => ({
+                      ...item,
+                      date: date.toLocaleDateString(),
+                    }))}
+                  />
+                )}
               </Card>
             </Col>
           </Row>
