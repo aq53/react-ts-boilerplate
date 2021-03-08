@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch, Redirect } from "react-router-dom";
 import routes from "../routes/routes";
-import AdminNavbar from "../components/Navbars/AdminNavbar";
+import AdminNavbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar/Sidebar";
 import ProtectedRoute from "../routes/protectedRoute";
 

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
+import { CSVLink } from "react-csv";
 import ReactDataGrid from "react-data-grid";
 import { Toolbar, Data } from "react-data-grid-addons";
-
-// import "./styles.css";
+import { Button } from "reactstrap";
 
 function Table({ data, columns }: { data: any; columns: any }) {
   const [filters, setFilters] = useState({});
@@ -51,21 +51,39 @@ function Table({ data, columns }: { data: any; columns: any }) {
   };
 
   return (
-    <ReactDataGrid
-      columns={columns}
-      rowGetter={(i: string | number) => filteredRows[i]}
-      rowsCount={filteredRows.length}
-      minHeight={500}
-      toolbar={<Toolbar enableFilter={true} />}
-      onAddFilter={(filter: any) => setFilters(handleFilterChange(filter))}
-      onClearFilters={() => setFilters({})}
-      getValidFilterValues={(columnKey: any) =>
-        getValidFilterValues(rows, columnKey)
-      }
-      onGridSort={(sortColumn: string, sortDirection: string) =>
-        setRows(sortRows(rows, sortColumn, sortDirection))
-      }
-    />
+    <>
+      <ReactDataGrid
+        columns={columns}
+        rowGetter={(i: string | number) => filteredRows[i]}
+        rowsCount={filteredRows.length}
+        minHeight={500}
+        toolbar={
+          <Toolbar enableFilter={true} >
+            {rows.length ? (
+              <CSVLink
+                data={rows}
+                headers={columns.map(
+                  (column: { name: string; key: string }) => ({
+                    label: column.name,
+                    key: column.key,
+                  })
+                )}
+              >
+                <Button>Download CSV</Button>
+              </CSVLink>
+            ) : null}
+          </Toolbar>
+        }
+        onAddFilter={(filter: any) => setFilters(handleFilterChange(filter))}
+        onClearFilters={() => setFilters({})}
+        getValidFilterValues={(columnKey: any) =>
+          getValidFilterValues(rows, columnKey)
+        }
+        onGridSort={(sortColumn: string, sortDirection: string) =>
+          setRows(sortRows(rows, sortColumn, sortDirection))
+        }
+      />
+    </>
   );
 }
 

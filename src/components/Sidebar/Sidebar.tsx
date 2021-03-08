@@ -13,7 +13,7 @@ import {
 } from "reactstrap";
 import { ISidebar } from "../../interfaces";
 import routes from "../../routes/routes";
-
+import brandLogo from "../../assets/img/brand/10p-logo.jpg";
 class Sidebar extends React.Component<ISidebar> {
   state = {
     collapseOpen: false,
@@ -37,7 +37,7 @@ class Sidebar extends React.Component<ISidebar> {
   };
   createLinks = (routes: any[]) => {
     return routes.map((prop, key) => {
-      return (
+      return prop.layout === "/admin" ? (
         <NavItem key={key}>
           <NavLink
             to={prop.layout + prop.path}
@@ -49,7 +49,7 @@ class Sidebar extends React.Component<ISidebar> {
             {prop.name}
           </NavLink>
         </NavItem>
-      );
+      ) : null;
     });
   };
   render() {
@@ -84,11 +84,7 @@ class Sidebar extends React.Component<ISidebar> {
           {/* Brand */}
           {logo ? (
             <NavbarBrand className="pt-0" {...navbarBrandProps}>
-              <img
-                alt={logo.imgAlt}
-                className="navbar-brand-img"
-                src={logo.imgSrc}
-              />
+              <img alt={"logo"} className="navbar-brand-img" src={brandLogo} />
             </NavbarBrand>
           ) : null}
           {/* Collapse */}
