@@ -5,6 +5,7 @@ import { Card, CardHeader, Container, Col, Row, Spinner } from "reactstrap";
 import { getMockReport } from "../../actions";
 import Table from "../../components/Table";
 import Header from "../../components/Header";
+import Loader from "../../components/Loader";
 
 const defaultColumnProperties = {
   filterable: true,
@@ -66,9 +67,7 @@ class Reports extends React.Component<{
                     </div>
                   </Row>
                 </CardHeader>
-                {this.props.mockReport.loading ? (
-                  <Spinner />
-                ) : (
+                <Loader loading={this.props.mockReport.loading}>
                   <Table
                     columns={columns}
                     data={this.props.mockReport.data.map((item) => ({
@@ -76,7 +75,7 @@ class Reports extends React.Component<{
                       date: date.toLocaleDateString(),
                     }))}
                   />
-                )}
+                </Loader>
               </Card>
             </Col>
           </Row>

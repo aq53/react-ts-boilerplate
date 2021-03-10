@@ -1,10 +1,13 @@
 import { createStore, applyMiddleware, combineReducers } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import createSagaMiddleware from "redux-saga";
-import { mockReportReducer } from "../reducers";
+import { instructionReportReducer, mockReportReducer } from "../reducers";
 import rootSaga from "../sagas";
 
-const reducers = { mockReport: mockReportReducer };
+const reducers = {
+  mockReport: mockReportReducer,
+  instructionReport: instructionReportReducer,
+};
 // create the saga middleware
 const sagaMiddleware = createSagaMiddleware();
 // mount it on the Store

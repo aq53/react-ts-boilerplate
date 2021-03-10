@@ -1,6 +1,7 @@
 import Login from "../containers/Login";
 import Dashboard from "../containers/Dashboard";
 import Reports from "../containers/Report";
+import GithubReport from "../containers/InstructionReport";
 
 var routes = [
   {
@@ -11,8 +12,15 @@ var routes = [
     layout: "/admin"
   },
   {
-    path: "/reports",
-    name: "Reports",
+    path: "/reports/instruction",
+    name: "Instruction Report",
+    icon: "ni ni-tv-2 text-primary",
+    component: GithubReport,
+    layout: "/admin"
+  },
+  {
+    path: "/reports/mock",
+    name: "Mock Report",
     icon: "ni ni-tv-2 text-primary",
     component: Reports,
     layout: "/admin"
