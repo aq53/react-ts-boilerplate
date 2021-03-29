@@ -23,6 +23,7 @@ const ReportTable = ({
   onFilter,
   onReset,
   paging,
+  fileName,
   data,
   loading
 }: IReportTable) => {
@@ -46,6 +47,7 @@ const ReportTable = ({
     if (pageNumber < 1 || pageNumber > paging.totalPages) {
       return;
     }
+    console.log({pageNumber})
     onFilter({ ...filters, pageNumber });
   };
 
@@ -92,6 +94,7 @@ const ReportTable = ({
                   <Button onClick={onSetFilters}>Apply</Button>
                   <CSVLink
                     data={data}
+                    filename={`${fileName}.csv`}
                     headers={headers.map(
                       (column: { name: string; key: string }) => ({
                         label: column.name,
@@ -128,15 +131,9 @@ const ReportTable = ({
                 <tbody>
                   {data.slice(intialSliceIndex, endSliceIndex).map((item) => (
                     <tr>
-                      <td>{item.customerName}</td>
-
-                      <td>{item.instructionId}</td>
-
-                      <td>{item.status}</td>
-
-                      <td>{item.processed}</td>
-
-                      <td>{item.createdAt}</td>
+                      {headers.map(header => (
+                        <td>{item[header.key]}</td>
+                      ))}
                     </tr>
                   ))}
                 </tbody>

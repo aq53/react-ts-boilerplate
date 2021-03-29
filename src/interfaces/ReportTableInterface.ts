@@ -8,5 +8,6 @@ export interface IReportTable {
   paging:IPagination;
   headers: Array<any>;
   data: Array<any>;
-  loading:boolean
+  loading:boolean;
+  fileName:string;
 }

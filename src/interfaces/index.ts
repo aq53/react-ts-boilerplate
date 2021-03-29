@@ -6,3 +6,4 @@ export * from "./InstructionReportAction";
 export * from "./FilterPayload";
 export * from "./PaginationInterface";
 export * from "./ReportTableInterface";
+export * from "./I_qec_ipe_1_report_action";
