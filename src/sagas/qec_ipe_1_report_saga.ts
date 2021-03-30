@@ -1141,8 +1141,9 @@ function* filter_qec_ipe_1_report(action: {
   if (action.payload.fromDate && action.payload.toDate) {
     data = data.filter(
       (item: any) =>
-        new Date(item.createdAt.$date) >= action.payload.fromDate &&
-        new Date(item.createdAt.$date) <= action.payload.toDate
+        // new Date(item.createdAt.$date) >= action.payload.fromDate 
+        // && new Date(item.createdAt.$date) <= action.payload.toDate 
+        String(item[action.payload.keyword.name])===String(action.payload.keyword.value)
     );
   }
 

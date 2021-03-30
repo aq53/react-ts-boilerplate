@@ -37,6 +37,7 @@ const columns = [
     name: "Approved In",
   },
 ].map((c) => ({ ...c, ...defaultColumnProperties }));
+
 class QEC_IPE_1_Report extends React.Component<{
   dispatch: any;
   qEC_IPE_1_Report: {

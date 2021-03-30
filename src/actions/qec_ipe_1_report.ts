@@ -19,3 +19,5 @@ export const filter_qec_ipe_1_report = (payload: IFilterPayload) => ({
   type: ACTION_TYPES.QEC_IPE_1_REPORT.FILTER_QEC_IPE_1_REPORT,
   payload,
 });
+
+
