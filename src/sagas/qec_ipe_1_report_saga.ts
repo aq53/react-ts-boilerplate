@@ -1145,7 +1145,7 @@ function* filter_qec_ipe_1_report(action: {
         {
           var rv = true
           Object.entries(action.payload.keyword).filter(([key, value]) => {
-            if (String(item[key].trim()) != String(action.payload.keyword[key].trim())) {
+            if (String(item[key]).trim() != String(action.payload.keyword[key]).trim()) {
               rv = false
             }
           })
@@ -1160,8 +1160,8 @@ function* filter_qec_ipe_1_report(action: {
     result: {
       data: filterData,
       paging: {
-        total: data.length,
-        totalPages: Math.ceil(data.length / 10),
+        total: filterData.length,
+        totalPages: Math.ceil(filterData.length / 10),
         pageNumber: action.payload.pageNumber || 1,
         pageSize: 10,
       },
@@ -1202,8 +1202,8 @@ function* sort_qec_ipe_1_report(action: {
     result: {
       data: sortItems,
       paging: {
-        total: data.length,
-        totalPages: Math.ceil(data.length / 10),
+        total: sortItems.length,
+        totalPages: Math.ceil(sortItems.length / 10),
         pageNumber: action.payload.pageNumber || 1,
         pageSize: 10,
       },
