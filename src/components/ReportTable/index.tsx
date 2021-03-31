@@ -86,23 +86,6 @@ const ReportTable = ({
   }
 
   const sortWith = (headerName: string) => {
-    // const items = [...sortData]
-
-    // let sortItems = items.sort((a, b) => {
-    //   if (a[headerName] <= b[headerName]) {
-    //     return direction === 'ascending' ? -1 : 1;
-    //   } 
-    //   if (a[headerName] >= b[headerName]) {
-    //     return direction === 'ascending' ? 1 : -1;
-    //   }
-    //   return 0
-    // })
-
-    // direction === "ascending" 
-    // ? setDirection("descending") 
-    // : setDirection("ascending")
-
-    // setSortData(sortItems)
     onSort({headerName: headerName, direction: direction})
     
     direction === "ascending" 
@@ -173,10 +156,11 @@ const ReportTable = ({
                 {
                   headers.map(header => (
                     <div className="col-md-2">
-                      <Label>{header.name}</Label>
+                      <Label><small>{header.name}</small></Label>
                       <Input 
-                        type="text"
+                        type={header.type}
                         className="form-control"
+                        size="sm"
                         name={header.key}
                         onChange={onKeywordChange}
                       />

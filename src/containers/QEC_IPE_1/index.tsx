@@ -15,26 +15,32 @@ const columns = [
   {
     key: "sNo",
     name: "S No",
+    type: "text"
   },
   {
     key: "faculty",
     name: "Faculty",
+    type: "text"
   },
   {
     key: "department",
     name: "Department",
+    type: "text"
   },
   {
     key: "program",
     name: "Program",
+    type: "text"
   },
   {
     key: "launchDate",
     name: "Launch Date",
+    type: "date"
   },
   {
     key: "approvedIn",
     name: "Approved In",
+    type: "date"
   },
 ].map((c) => ({ ...c, ...defaultColumnProperties }));
 

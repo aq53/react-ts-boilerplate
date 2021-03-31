@@ -1103,7 +1103,7 @@ function* get_qec_ipe_1_report() {
   //   };
 
 
-
+  debugger;
   // call api service here
   let reports: IClientResponse = yield call(
     ReportApiService.get_qec_ipe_1_report
@@ -1131,7 +1131,7 @@ function* get_qec_ipe_1_report() {
 
 }
 
-function* filter_qec_ipe_1_report(action: {
+function* filter_qec_ipe_1_report(action: { 
   type: string;
   payload: IFilterPayload;
 }) {
@@ -1140,7 +1140,7 @@ function* filter_qec_ipe_1_report(action: {
   let data = store.getState().qEC_IPE_1_Report.data;
   if (action.payload.fromDate && action.payload.toDate) {
     var filterData = [] 
-    data.forEach(
+    data=data.filter(
       (item: any) =>
         {
           var rv = true
@@ -1149,19 +1149,20 @@ function* filter_qec_ipe_1_report(action: {
               rv = false
             }
           })
-          rv==true && filterData.push(item)
+          if (rv==true) {
+            return item
+          }
         } 
     );
   }
-
-
+  console.log({filterData})
   const reports: IClientResponse = {
     hasErrors: false,
-    result: {
-      data: filterData,
+    result: { 
+      data,
       paging: {
-        total: filterData.length,
-        totalPages: Math.ceil(filterData.length / 10),
+        total: data.length,
+        totalPages: Math.ceil(data.length / 10),
         pageNumber: action.payload.pageNumber || 1,
         pageSize: 10,
       },
@@ -1182,9 +1183,9 @@ function* sort_qec_ipe_1_report(action: {
   payload: ISortPayload;
 }) {
   console.log("This is action: ", action)
+  debugger
   yield put(load_qec_ipe_1_report());
   let data = store.getState().qEC_IPE_1_Report.data;
-
   const items = [...data]
 
   let sortItems = items.sort((a, b) => {
