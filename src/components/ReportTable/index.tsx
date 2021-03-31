@@ -86,25 +86,28 @@ const ReportTable = ({
   }
 
   const sortWith = (headerName: string) => {
-    const items = [...sortData]
+    // const items = [...sortData]
 
-    let sortItems = items.sort((a, b) => {
-      if (a[headerName] <= b[headerName]) {
-        return direction === 'ascending' ? -1 : 1;
-      } 
-      if (a[headerName] >= b[headerName]) {
-        return direction === 'ascending' ? 1 : -1;
-      }
-      return 0
-    })
+    // let sortItems = items.sort((a, b) => {
+    //   if (a[headerName] <= b[headerName]) {
+    //     return direction === 'ascending' ? -1 : 1;
+    //   } 
+    //   if (a[headerName] >= b[headerName]) {
+    //     return direction === 'ascending' ? 1 : -1;
+    //   }
+    //   return 0
+    // })
 
+    // direction === "ascending" 
+    // ? setDirection("descending") 
+    // : setDirection("ascending")
+
+    // setSortData(sortItems)
+    onSort({headerName: headerName, direction: direction})
+    
     direction === "ascending" 
     ? setDirection("descending") 
     : setDirection("ascending")
-
-    setSortData(sortItems)
-
-    onSort({headerName: headerName})
   }
 
   return (

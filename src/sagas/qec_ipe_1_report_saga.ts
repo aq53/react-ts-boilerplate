@@ -1181,10 +1181,42 @@ function* sort_qec_ipe_1_report(action: {
   type: string;
   payload: ISortPayload;
 }) {
-  debugger
   console.log("This is action: ", action)
   yield put(load_qec_ipe_1_report());
   let data = store.getState().qEC_IPE_1_Report.data;
+
+  const items = [...data]
+
+  let sortItems = items.sort((a, b) => {
+    if (a[action.payload.headerName] <= b[action.payload.headerName]) {
+      return action.payload.direction === 'ascending' ? -1 : 1;
+    } 
+    if (a[action.payload.headerName] >= b[action.payload.headerName]) {
+      return action.payload.direction === 'ascending' ? 1 : -1;
+    }
+    return 0
+  })
+
+  const reports: IClientResponse = {
+    hasErrors: false,
+    result: {
+      data: sortItems,
+      paging: {
+        total: data.length,
+        totalPages: Math.ceil(data.length / 10),
+        pageNumber: action.payload.pageNumber || 1,
+        pageSize: 10,
+      },
+    },
+    status: 200,
+    statusText: "Successfull",
+  };
+
+  // call api service here
+  console.log("dadasdsa",reports)
+  if (!reports.hasErrors) {
+    yield put(save_qec_ipe_1_report(reports.result));
+  }
 }
 
 export function* watch_get_qec_ipe_1_report() {
