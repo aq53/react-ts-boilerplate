@@ -29,6 +29,7 @@ const ReportTable = ({
   headers,
   onFilter,
   onReset,
+  onSort,
   paging,
   fileName,
   data,
@@ -36,7 +37,7 @@ const ReportTable = ({
 }: IReportTable) => {
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
-  const [keyword, setKeyword] = useState({name: "", value: ""})
+  const [keyword, setKeyword] = useState({})
   const [sortData, setSortData] = useState(data)
   const [direction, setDirection] = useState("ascending")
   const [filters, setFilters] = useState({});
@@ -74,6 +75,16 @@ const ReportTable = ({
   const intialSliceIndex = (paging.pageNumber - 1) * 10;
   const endSliceIndex = paging.pageNumber * 10;
 
+
+  const onKeywordChange = (e) => {
+    const { name, value } = e.target
+
+    setKeyword(prevState => ({
+      ...prevState,
+      [name]: value
+    }))
+  }
+
   const sortWith = (headerName: string) => {
     const items = [...sortData]
 
@@ -92,6 +103,8 @@ const ReportTable = ({
     : setDirection("ascending")
 
     setSortData(sortItems)
+
+    onSort({headerName: headerName})
   }
 
   return (
@@ -104,7 +117,7 @@ const ReportTable = ({
             </CardHeader>
             <CardBody>
               <Row>
-                <div className="col-md-2">
+                {/* <div className="col-md-2">
                   <Label for="from-date">From</Label>
                   <DatePicker
                     className="form-control"
@@ -153,9 +166,22 @@ const ReportTable = ({
                       </Input>
                     </div>
                   </div>
-                </div>
+                </div> */}
+                {
+                  headers.map(header => (
+                    <div className="col-md-2">
+                      <Label>{header.name}</Label>
+                      <Input 
+                        type="text"
+                        className="form-control"
+                        name={header.key}
+                        onChange={onKeywordChange}
+                      />
+                    </div>
+                  ))
+                }
 
-                <div className="col-md-6 flex-end">
+                <div className="col-md-6 my-3">
                   <Button onClick={onClickReset}>Reset</Button>
                   <Button onClick={onSetFilters}>Apply</Button>
                   <CSVLink

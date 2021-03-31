@@ -1,5 +1,5 @@
 import { ACTION_TYPES } from "../constants/actionTypes";
-import { IFilterPayload } from "../interfaces";
+import { IFilterPayload, ISortPayload } from "../interfaces";
 
 export const get_qec_ipe_1_report = () => ({
   type: ACTION_TYPES.QEC_IPE_1_REPORT.GET_QEC_IPE_1_REPORT,
@@ -19,5 +19,10 @@ export const filter_qec_ipe_1_report = (payload: IFilterPayload) => ({
   type: ACTION_TYPES.QEC_IPE_1_REPORT.FILTER_QEC_IPE_1_REPORT,
   payload,
 });
+
+export const sort_qec_ipe_1_report = (payload: ISortPayload) => ({
+  type: ACTION_TYPES.QEC_IPE_1_REPORT.SORT_QEC_IPE_1_REPORT,
+  payload,
+})
 
 

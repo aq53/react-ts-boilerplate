@@ -2,7 +2,7 @@ import { takeEvery, put, call } from "redux-saga/effects";
 import { load_qec_ipe_1_report, save_qec_ipe_1_report } from "../actions";
 import { ACTION_TYPES } from "../constants/actionTypes";
 import store from '../store/store'
-import { IClientResponse, IFilterPayload } from "../interfaces";
+import { IClientResponse, IFilterPayload, ISortPayload } from "../interfaces";
 import inboundInstructions from "../sampleData/inboundinstructions.json";
 import { ReportApiService } from "../services";
 
@@ -1139,18 +1139,26 @@ function* filter_qec_ipe_1_report(action: {
   yield put(load_qec_ipe_1_report());
   let data = store.getState().qEC_IPE_1_Report.data;
   if (action.payload.fromDate && action.payload.toDate) {
-    data = data.filter(
+    var filterData = [] 
+    data.forEach(
       (item: any) =>
-        // new Date(item.createdAt.$date) >= action.payload.fromDate 
-        // && new Date(item.createdAt.$date) <= action.payload.toDate 
-        String(item[action.payload.keyword.name])===String(action.payload.keyword.value)
+        {
+          var rv = true
+          Object.entries(action.payload.keyword).filter(([key, value]) => {
+            if (String(item[key].trim()) != String(action.payload.keyword[key].trim())) {
+              rv = false
+            }
+          })
+          rv==true && filterData.push(item)
+        } 
     );
   }
+
 
   const reports: IClientResponse = {
     hasErrors: false,
     result: {
-      data: data,
+      data: filterData,
       paging: {
         total: data.length,
         totalPages: Math.ceil(data.length / 10),
@@ -1169,6 +1177,16 @@ function* filter_qec_ipe_1_report(action: {
   }
 }
 
+function* sort_qec_ipe_1_report(action: {
+  type: string;
+  payload: ISortPayload;
+}) {
+  debugger
+  console.log("This is action: ", action)
+  yield put(load_qec_ipe_1_report());
+  let data = store.getState().qEC_IPE_1_Report.data;
+}
+
 export function* watch_get_qec_ipe_1_report() {
   yield takeEvery(
     ACTION_TYPES.QEC_IPE_1_REPORT.GET_QEC_IPE_1_REPORT,
@@ -1181,4 +1199,11 @@ export function* watch_filter_qec_ipe_1_report() {
     ACTION_TYPES.QEC_IPE_1_REPORT.FILTER_QEC_IPE_1_REPORT,
     filter_qec_ipe_1_report
   );
+}
+
+export function* watch_sort_qec_ipe_1_report() {
+  yield takeEvery(
+    ACTION_TYPES.QEC_IPE_1_REPORT.SORT_QEC_IPE_1_REPORT,
+    sort_qec_ipe_1_report
+  )
 }
