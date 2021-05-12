@@ -2,7 +2,7 @@ import { takeEvery, put, call } from "redux-saga/effects";
 import { load_qec_ipe_1_report, save_qec_ipe_1_report } from "../actions";
 import { ACTION_TYPES } from "../constants/actionTypes";
 import store from '../store/store'
-import { IClientResponse, IFilterPayload } from "../interfaces";
+import { IClientResponse, IFilterPayload, ISortPayload } from "../interfaces";
 import inboundInstructions from "../sampleData/inboundinstructions.json";
 import { ReportApiService } from "../services";
 
@@ -1103,7 +1103,7 @@ function* get_qec_ipe_1_report() {
   //   };
 
 
-
+  debugger;
   // call api service here
   let reports: IClientResponse = yield call(
     ReportApiService.get_qec_ipe_1_report
@@ -1131,7 +1131,7 @@ function* get_qec_ipe_1_report() {
 
 }
 
-function* filter_qec_ipe_1_report(action: {
+function* filter_qec_ipe_1_report(action: { 
   type: string;
   payload: IFilterPayload;
 }) {
@@ -1139,20 +1139,72 @@ function* filter_qec_ipe_1_report(action: {
   yield put(load_qec_ipe_1_report());
   let data = store.getState().qEC_IPE_1_Report.data;
   if (action.payload.fromDate && action.payload.toDate) {
-    data = data.filter(
+    var filterData = [] 
+    data=data.filter(
       (item: any) =>
-        new Date(item.createdAt.$date) >= action.payload.fromDate &&
-        new Date(item.createdAt.$date) <= action.payload.toDate
+        {
+          var rv = true
+          Object.entries(action.payload.keyword).filter(([key, value]) => {
+            if (String(item[key]).trim() != String(action.payload.keyword[key]).trim()) {
+              rv = false
+            }
+          })
+          if (rv==true) {
+            return item
+          }
+        } 
     );
   }
+  console.log({filterData})
+  const reports: IClientResponse = {
+    hasErrors: false,
+    result: { 
+      data,
+      paging: {
+        total: data.length,
+        totalPages: Math.ceil(data.length / 10),
+        pageNumber: action.payload.pageNumber || 1,
+        pageSize: 10,
+      },
+    },
+    status: 200,
+    statusText: "Successfull",
+  };
+
+  // call api service here
+  console.log("dadasdsa",reports)
+  if (!reports.hasErrors) {
+    yield put(save_qec_ipe_1_report(reports.result));
+  }
+}
+
+function* sort_qec_ipe_1_report(action: {
+  type: string;
+  payload: ISortPayload;
+}) {
+  console.log("This is action: ", action)
+  debugger
+  yield put(load_qec_ipe_1_report());
+  let data = store.getState().qEC_IPE_1_Report.data;
+  const items = [...data]
+
+  let sortItems = items.sort((a, b) => {
+    if (a[action.payload.headerName] <= b[action.payload.headerName]) {
+      return action.payload.direction === 'ascending' ? -1 : 1;
+    } 
+    if (a[action.payload.headerName] >= b[action.payload.headerName]) {
+      return action.payload.direction === 'ascending' ? 1 : -1;
+    }
+    return 0
+  })
 
   const reports: IClientResponse = {
     hasErrors: false,
     result: {
-      data: data,
+      data: sortItems,
       paging: {
-        total: data.length,
-        totalPages: Math.ceil(data.length / 10),
+        total: sortItems.length,
+        totalPages: Math.ceil(sortItems.length / 10),
         pageNumber: action.payload.pageNumber || 1,
         pageSize: 10,
       },
@@ -1180,4 +1232,11 @@ export function* watch_filter_qec_ipe_1_report() {
     ACTION_TYPES.QEC_IPE_1_REPORT.FILTER_QEC_IPE_1_REPORT,
     filter_qec_ipe_1_report
   );
+}
+
+export function* watch_sort_qec_ipe_1_report() {
+  yield takeEvery(
+    ACTION_TYPES.QEC_IPE_1_REPORT.SORT_QEC_IPE_1_REPORT,
+    sort_qec_ipe_1_report
+  )
 }

@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Container, Row, Spinner } from "reactstrap";
-import { filterInstructionReport, getInstructionReport } from "../../actions";
-import { IFilterPayload, IPagination } from "../../interfaces";
+import { filterInstructionReport, getInstructionReport, sort_qec_ipe_1_report } from "../../actions";
+import { IFilterPayload, IPagination, ISortPayload } from "../../interfaces";
 import ReportTable from "../../components/ReportTable";
 import Header from "../../components/Header";
 
@@ -15,22 +15,27 @@ const columns = [
   {
     key: "customerName",
     name: "Customer",
+    type: "text",
   },
   {
     key: "instructionId",
     name: "Instruction Id",
+    type: "text",
   },
   {
     key: "status",
     name: "Status",
+    type: "text",
   },
   {
     key: "processed",
     name: "Processed",
+    type: "text",
   },
   {
     key: "createdAt",
     name: "Created At",
+    type: "date",
   },
 ].map((c) => ({ ...c, ...defaultColumnProperties }));
 class InstructionReport extends React.Component<{
@@ -50,6 +55,9 @@ class InstructionReport extends React.Component<{
   onFilter = (payload: IFilterPayload) => {
     this.props.dispatch(filterInstructionReport(payload));
   };
+  onSort = (payload: ISortPayload) => {
+    this.props.dispatch(sort_qec_ipe_1_report(payload));
+  };
 
   render() {
     const { instructionReport } = this.props;
@@ -68,6 +76,7 @@ class InstructionReport extends React.Component<{
           <ReportTable
             onReset={this.getReport}
             onFilter={this.onFilter}
+            onSort={this.onSort}
             paging={instructionReport.paging}
             headers={columns}
             title="Inbound Instructions Report"

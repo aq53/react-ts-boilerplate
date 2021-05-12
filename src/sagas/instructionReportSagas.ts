@@ -32,23 +32,35 @@ function* filterInstructionReport(action: {
   type: string;
   payload: IFilterPayload;
 }) {
-  yield put(loadInstructionReport());
-  let instructions = [...inboundInstructions];
-  if (action.payload.fromDate && action.payload.toDate) {
-    instructions = instructions.filter(
-      (item: any) =>
-        new Date(item.createdAt.$date) >= action.payload.fromDate &&
-        new Date(item.createdAt.$date) <= action.payload.toDate
-    );
+    console.log("payload::", action)
+    debugger
+    yield put(loadInstructionReport());
+    // let instructions = [...inboundInstructions];
+    let data = store.getState().qEC_IPE_1_Report.data;
+
+    if (action.payload.fromDate && action.payload.toDate) {
+      var filterData = [] 
+      instructions.forEach(
+        (item: any) =>
+          {
+            var rv = true
+            Object.entries(action.payload.keyword).filter(([key, value]) => {
+              if (String(item[key]).trim() != String(action.payload.keyword[key]).trim()) {
+                rv = false
+              }
+            })
+            rv==true && filterData.push(item)
+          } 
+      );
   }
 
   const reports: IClientResponse = {
     hasErrors: false,
     result: {
-      data: instructions,
+      data: filterData,
       paging: {
-        total: instructions.length,
-        totalPages: Math.ceil(instructions.length / 10),
+        total: filterData.length,
+        totalPages: Math.ceil(filterData.length / 10),
         pageNumber: action.payload.pageNumber || 1,
         pageSize: 10,
       },

@@ -1,8 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Container, Row, Spinner } from "reactstrap";
-import { filter_qec_ipe_1_report, get_qec_ipe_1_report } from "../../actions";
-import { IFilterPayload, IPagination } from "../../interfaces";
+import { filter_qec_ipe_1_report, get_qec_ipe_1_report, sort_qec_ipe_1_report } from "../../actions";
+import { IFilterPayload, IPagination, ISortPayload } from "../../interfaces";
 import ReportTable from "../../components/ReportTable";
 import Header from "../../components/Header";
 
@@ -15,28 +15,35 @@ const columns = [
   {
     key: "sNo",
     name: "S No",
+    type: "text"
   },
   {
     key: "faculty",
     name: "Faculty",
+    type: "text"
   },
   {
     key: "department",
     name: "Department",
+    type: "text"
   },
   {
     key: "program",
     name: "Program",
+    type: "text"
   },
   {
     key: "launchDate",
     name: "Launch Date",
+    type: "date"
   },
   {
     key: "approvedIn",
     name: "Approved In",
+    type: "date"
   },
 ].map((c) => ({ ...c, ...defaultColumnProperties }));
+
 class QEC_IPE_1_Report extends React.Component<{
   dispatch: any;
   qEC_IPE_1_Report: {
@@ -53,6 +60,9 @@ class QEC_IPE_1_Report extends React.Component<{
   };
   onFilter = (payload: IFilterPayload) => {
     this.props.dispatch(filter_qec_ipe_1_report(payload));
+  };
+  onSort = (payload: ISortPayload) => {
+    this.props.dispatch(sort_qec_ipe_1_report(payload));
   };
 
   render() {
@@ -72,6 +82,7 @@ class QEC_IPE_1_Report extends React.Component<{
           <ReportTable
             onReset={this.getReport}
             onFilter={this.onFilter}
+            onSort={this.onSort}
             fileName="Faculty-Department-wise list of academic program"
             paging={qEC_IPE_1_Report.paging}
             headers={columns}

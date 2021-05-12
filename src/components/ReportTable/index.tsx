@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { filter } from "lodash";
+import React, { useEffect, useState } from "react";
 import { CSVLink } from "react-csv";
 import DatePicker from "react-datepicker";
 
@@ -11,6 +12,12 @@ import {
   CardBody,
   Label,
   Button,
+  DropdownToggle,
+  DropdownMenu,
+  DropdownItem,
+  InputGroupButtonDropdown,
+  InputGroup,
+  Input,
 } from "reactstrap";
 import { IReportTable } from "../../interfaces";
 import Loader from "../Loader";
@@ -22,6 +29,7 @@ const ReportTable = ({
   headers,
   onFilter,
   onReset,
+  onSort,
   paging,
   fileName,
   data,
@@ -29,17 +37,26 @@ const ReportTable = ({
 }: IReportTable) => {
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
+  const [keyword, setKeyword] = useState({})
+  const [sortData, setSortData] = useState(data)
+  const [direction, setDirection] = useState("ascending")
   const [filters, setFilters] = useState({});
+
+  useEffect(() => {
+    setSortData(data)
+  }, [data])
 
   const onSetFilters = () => {
     onFilter({
       fromDate,
       toDate,
       pageNumber: paging.pageNumber,
+      keyword
     });
     setFilters({
       fromDate,
       toDate,
+      keyword
     });
   };
 
@@ -57,6 +74,25 @@ const ReportTable = ({
   };
   const intialSliceIndex = (paging.pageNumber - 1) * 10;
   const endSliceIndex = paging.pageNumber * 10;
+
+
+  const onKeywordChange = (e) => {
+    const { name, value } = e.target
+
+    setKeyword(prevState => ({
+      ...prevState,
+      [name]: value
+    }))
+  }
+
+  const sortWith = (headerName: string) => {
+    onSort({headerName: headerName, direction: direction})
+    
+    direction === "ascending" 
+    ? setDirection("descending") 
+    : setDirection("ascending")
+  }
+
   return (
     <>
       <Row>
@@ -67,7 +103,7 @@ const ReportTable = ({
             </CardHeader>
             <CardBody>
               <Row>
-                <div className="col-md-2">
+                {/* <div className="col-md-2">
                   <Label for="from-date">From</Label>
                   <DatePicker
                     className="form-control"
@@ -89,7 +125,50 @@ const ReportTable = ({
                   />
                 </div>
 
-                <div className="col-md-8 flex-end">
+                <div className="col-md-2">
+                  <Label>Column</Label>
+                  <div className="d-flex flex-row">
+                    <div >
+                      <Input 
+                        className="form-control"
+                        style={{width: "150px"}}
+                        onChange={(e) => setKeyword({...keyword, value: e.target.value})}
+                      />
+                    </div>
+                    <div>
+                      <Input 
+                        type="select" 
+                        name="select"
+                        className="form-control"
+                        style={{width: "150px"}}
+                        onChange={(e) => setKeyword({...keyword, name: e.target.value})}
+                      >
+                        <option>Select field</option>
+                        {headers.map((header) => (
+                          <option>
+                            {header.key}
+                          </option>
+                        ))}
+                      </Input>
+                    </div>
+                  </div>
+                </div> */}
+                {
+                  headers.map(header => (
+                    <div className="col-md-2">
+                      <Label><small>{header.name}</small></Label>
+                      <Input 
+                        type={header.type}
+                        className="form-control"
+                        size="sm"
+                        name={header.key}
+                        onChange={onKeywordChange}
+                      />
+                    </div>
+                  ))
+                }
+
+                <div className="col-md-6 my-3">
                   <Button onClick={onClickReset}>Reset</Button>
                   <Button onClick={onSetFilters}>Apply</Button>
                   <CSVLink
@@ -122,14 +201,18 @@ const ReportTable = ({
                 <thead className="thead-light">
                   <tr>
                     {headers.map((header) => (
-                      <th key={header.key} scope="col">
+                      <th 
+                        key={header.key} 
+                        scope="col" 
+                        onClick={() => sortWith(header.key)}
+                      >
                         {header.name}
                       </th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {data.slice(intialSliceIndex, endSliceIndex).map((item) => (
+                  {sortData.slice(intialSliceIndex, endSliceIndex).map((item) => (
                     <tr>
                       {headers.map(header => (
                         <td>{item[header.key]}</td>
